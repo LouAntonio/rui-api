@@ -197,7 +197,7 @@ router.post('/reset-password', userController.resetPassword);
  */
 router.post(
 	'/list',
-	authMiddleware.isAuthenticated,
+	authMiddleware.isAdmin,
 	requirePermission('users:read'),
 	userController.listUsers
 );
@@ -221,89 +221,9 @@ router.post(
  */
 router.get(
 	'/:id',
-	authMiddleware.isAuthenticated,
+	authMiddleware.isAdmin,
 	requirePermission('users:read'),
 	userController.getUserById
-);
-
-/**
- * @openapi
- * /users/{id}:
- *   patch:
- *     tags: [Utilizadores]
- *     summary: Atualizar utilizador (Admin)
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema: { type: string }
- *     responses:
- *       200:
- *         description: Utilizador atualizado
- */
-router.patch(
-	'/:id',
-	authMiddleware.isAuthenticated,
-	requirePermission('users:write'),
-	userController.updateUser
-);
-
-/**
- * @openapi
- * /users/{id}:
- *   delete:
- *     tags: [Utilizadores]
- *     summary: Eliminar utilizador (Admin)
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema: { type: string }
- *     responses:
- *       200:
- *         description: Utilizador eliminado
- */
-router.delete(
-	'/:id',
-	authMiddleware.isAuthenticated,
-	requirePermission('users:write'),
-	userController.deleteUser
-);
-
-/**
- * @openapi
- * /users/update-role:
- *   patch:
- *     tags: [Utilizadores]
- *     summary: Alterar role de utilizador (Admin)
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required: [userId, role]
- *             properties:
- *               userId:
- *                 type: string
- *               role:
- *                 type: string
- *                 enum: [ADMIN, SELLER]
- *     responses:
- *       200:
- *         description: Role atualizado
- */
-router.patch(
-	'/update-role',
-	authMiddleware.isAuthenticated,
-	requirePermission('users:write'),
-	userController.updateUserRole
 );
 
 /**
@@ -333,9 +253,89 @@ router.patch(
  */
 router.patch(
 	'/toggle-status',
-	authMiddleware.isAuthenticated,
+	authMiddleware.isAdmin,
 	requirePermission('users:write'),
 	userController.toggleUserStatus
+);
+
+/**
+ * @openapi
+ * /users/update-role:
+ *   patch:
+ *     tags: [Utilizadores]
+ *     summary: Alterar role de utilizador (Admin)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [userId, role]
+ *             properties:
+ *               userId:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [ADMIN, SELLER]
+ *     responses:
+ *       200:
+ *         description: Role atualizado
+ */
+router.patch(
+	'/update-role',
+	authMiddleware.isAdmin,
+	requirePermission('users:write'),
+	userController.updateUserRole
+);
+
+/**
+ * @openapi
+ * /users/{id}:
+ *   patch:
+ *     tags: [Utilizadores]
+ *     summary: Atualizar utilizador (Admin)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Utilizador atualizado
+ */
+router.patch(
+	'/:id',
+	authMiddleware.isAdmin,
+	requirePermission('users:write'),
+	userController.updateUser
+);
+
+/**
+ * @openapi
+ * /users/{id}:
+ *   delete:
+ *     tags: [Utilizadores]
+ *     summary: Eliminar utilizador (Admin)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Utilizador eliminado
+ */
+router.delete(
+	'/:id',
+	authMiddleware.isAdmin,
+	requirePermission('users:write'),
+	userController.deleteUser
 );
 
 // ─── Sessão ───────────────────────────────────────────────────────────────────
@@ -394,7 +394,7 @@ router.post('/refresh-token', userController.refreshToken);
  *       200:
  *         description: Logout efetuado
  */
-router.post('/logout', authMiddleware.isAuthenticated, userController.logout);
+router.post('/logout', authMiddleware.isAdmin, userController.logout);
 
 /**
  * @openapi
@@ -408,6 +408,6 @@ router.post('/logout', authMiddleware.isAuthenticated, userController.logout);
  *       200:
  *         description: Logout global efetuado
  */
-router.post('/logout-all', authMiddleware.isAuthenticated, userController.logoutAll);
+router.post('/logout-all', authMiddleware.isAdmin, userController.logoutAll);
 
 module.exports = router;

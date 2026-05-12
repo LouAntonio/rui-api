@@ -3,6 +3,7 @@ const router = express.Router();
 const dishController = require('../controllers/dish.controller');
 const { upload, uploadImage } = require('../middlewares/upload.middleware');
 const { requirePermission } = require('../middlewares/rbac.middleware');
+const authMiddleware = require('../middlewares/auth.middleware');
 
 /**
  * @openapi
@@ -106,14 +107,30 @@ router.get('/:id', dishController.getDishById);
  *       201:
  *         description: Prato criado
  */
-router.post('/', requirePermission('dishes:write'), dishController.createDish);
+router.post(
+	'/',
+	authMiddleware.isAdmin,
+	requirePermission('dishes:write'),
+	dishController.createDish
+);
 
-router.patch('/:id', requirePermission('dishes:write'), dishController.updateDish);
+router.patch(
+	'/:id',
+	authMiddleware.isAdmin,
+	requirePermission('dishes:write'),
+	dishController.updateDish
+);
 
-router.delete('/:id', requirePermission('dishes:write'), dishController.deleteDish);
+router.delete(
+	'/:id',
+	authMiddleware.isAdmin,
+	requirePermission('dishes:write'),
+	dishController.deleteDish
+);
 
 router.post(
 	'/upload-image',
+	authMiddleware.isAdmin,
 	requirePermission('dishes:write'),
 	upload.single('image'),
 	uploadImage

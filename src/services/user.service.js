@@ -81,7 +81,7 @@ const register = async ({ name, surname, email, password }) => {
 
 	const hashedPassword = await bcrypt.hash(password, 12);
 	const user = await prisma.user.create({
-		data: { name, surname, email, password: hashedPassword }
+		data: { name, surname, email, password: hashedPassword, lastLogin: new Date() }
 	});
 
 	return user;
@@ -115,7 +115,7 @@ const ACCESS_TOKEN_EXPIRY = '15m';
 const REFRESH_TOKEN_EXPIRY_DAYS = 7;
 
 const generateAccessToken = (payload) => {
-	return jwt.sign(payload, process.env.JWT_USERSECRET, { expiresIn: ACCESS_TOKEN_EXPIRY });
+	return jwt.sign(payload, process.env.JWT_USER_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRY });
 };
 
 const generateAdminAccessToken = (payload) => {
@@ -133,7 +133,7 @@ const generateRefreshToken = async (userId) => {
 };
 
 const verifyAccessToken = (token) => {
-	return jwt.verify(token, process.env.JWT_USERSECRET);
+	return jwt.verify(token, process.env.JWT_USER_SECRET);
 };
 
 const verifyAdminAccessToken = (token) => {
@@ -163,7 +163,7 @@ const cleanExpiredTokens = async () => {
 };
 
 const generateTokensForUser = async (user, isAdmin = false) => {
-	const secret = isAdmin ? process.env.JWT_ADMIN_SECRET : process.env.JWT_USERSECRET;
+	const secret = isAdmin ? process.env.JWT_ADMIN_SECRET : process.env.JWT_USER_SECRET;
 	const accessToken = jwt.sign({ id: user.id, role: user.role }, secret, {
 		expiresIn: ACCESS_TOKEN_EXPIRY
 	});

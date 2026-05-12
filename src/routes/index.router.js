@@ -3,6 +3,7 @@ const router = express.Router();
 const userRoutes = require('./user.router.js');
 const categoryRoutes = require('./category.router.js');
 const dishRoutes = require('./dish.router.js');
+const uploadRoutes = require('./upload.router.js');
 const prisma = require('../configs/prisma');
 
 /**
@@ -102,5 +103,6 @@ router.get('/health', async (_req, res) => {
 router.use('/users', userRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/dishes', dishRoutes);
+router.use('/uploads', uploadRoutes);
 
 module.exports = router;

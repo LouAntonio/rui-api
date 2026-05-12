@@ -39,7 +39,7 @@ model User {
 	surname   String
 	email     String     @unique
 	password  String
-	role      Role       @default(SELLER)
+	role      Role       @default(ADMIN)
 	status    UserStatus @default(ACTIVE)
 	lastLogin DateTime
 	createdAt DateTime   @default(now())

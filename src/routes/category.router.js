@@ -70,6 +70,7 @@ router.get('/:id', categoryController.getCategoryById);
  */
 router.post(
 	'/',
+	middleware.isAdmin,
 	middleware.requirePermission('categories:write'),
 	categoryController.createCategory
 );
@@ -102,12 +103,14 @@ router.post(
  */
 router.patch(
 	'/:id',
+	middleware.isAdmin,
 	middleware.requirePermission('categories:write'),
 	categoryController.updateCategory
 );
 
 router.delete(
 	'/:id',
+	middleware.isAdmin,
 	middleware.requirePermission('categories:write'),
 	categoryController.deleteCategory
 );

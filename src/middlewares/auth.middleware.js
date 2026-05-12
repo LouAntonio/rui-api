@@ -11,7 +11,7 @@ const isAuthenticated = (req, res, next) => {
 	const token = authHeader.split(' ')[1];
 
 	try {
-		const decoded = jwt.verify(token, process.env.JWT_USERSECRET);
+		const decoded = jwt.verify(token, process.env.JWT_USER_SECRET);
 		req.user = decoded;
 		next();
 	} catch (error) {
@@ -67,7 +67,7 @@ const optionalAuth = (req, res, next) => {
 	const token = authHeader.split(' ')[1];
 
 	try {
-		const decoded = jwt.verify(token, process.env.JWT_USERSECRET);
+		const decoded = jwt.verify(token, process.env.JWT_USER_SECRET);
 		req.user = decoded;
 	} catch (error) {
 		req.user = null;

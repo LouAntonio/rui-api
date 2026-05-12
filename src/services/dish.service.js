@@ -78,12 +78,11 @@ const getDishesByDate = async (dateStr) => {
 };
 
 const createDish = async (data) => {
+	const { categoryIds, ...rest } = data;
 	return prisma.dish.create({
 		data: {
-			...data,
-			categories: data.categoryIds
-				? { connect: data.categoryIds.map((id) => ({ id })) }
-				: undefined
+			...rest,
+			categories: categoryIds ? { connect: categoryIds.map((id) => ({ id })) } : undefined
 		},
 		include: { categories: { select: { id: true, name: true } } }
 	});
