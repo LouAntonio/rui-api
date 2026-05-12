@@ -14,9 +14,8 @@ services:
         expose:
             - '3000'
         networks:
-            - rui-net
+            - caxiauto-net
 
 networks:
     caxiauto-net:
         external: true
-        name: rui-net

@@ -9,6 +9,8 @@ COPY prisma.config.ts ./
 
 RUN npm ci --omit=dev
 
+RUN npx prisma generate
+
 COPY src ./src
 
 ENV NODE_ENV=production
