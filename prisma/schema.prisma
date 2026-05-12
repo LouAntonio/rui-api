@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+	provider = "prisma-client-js"
+}
+
+datasource db {
+	provider = "postgresql"
+}
+
+enum Role {
+	ADMIN
+	SELLER
+}
+
+enum DayOfWeek {
+	MONDAY
+	TUESDAY
+	WEDNESDAY
+	THURSDAY
+	FRIDAY
+	SATURDAY
+	SUNDAY
+}
+
+enum UserStatus {
+	ACTIVE
+	INACTIVE
+	SUSPENDED
+}
+
+model User {
+	id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	name      String
+	surname   String
+	email     String     @unique
+	password  String
+	role      Role       @default(SELLER)
+	status    UserStatus @default(ACTIVE)
+	lastLogin DateTime
+	createdAt DateTime   @default(now())
+	updatedAt DateTime   @updatedAt
+
+	refreshTokens RefreshToken[]
+
+	@@map("users")
+}
+
+model Category {
+	id   String @id @default(uuid())
+	name String @unique
+
+	dishes Dish[]
+
+	@@map("categories")
+}
+
+model Dish {
+	id          String  @id @default(uuid())
+	name        String
+	description String?
+	price       Decimal @db.Decimal(10, 2)
+	imageUrl    String?
+	isActive    Boolean @default(true)
+
+	categories Category[]
+
+	availableDays DayOfWeek[]
+
+	createdAt DateTime @default(now())
+	updatedAt DateTime @updatedAt
+
+	@@map("dishes")
+}
+
+model RefreshToken {
+	id        String   @id @default(uuid())
+	token     String   @unique
+	userId    String   @db.Uuid
+	user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+	expiresAt DateTime
+	createdAt DateTime @default(now())
+
+	@@map("refresh_tokens")
+}
