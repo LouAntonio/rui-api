@@ -1,0 +1,22 @@
+services:
+    api:
+        container_name: api
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: rui-api:latest
+        restart: unless-stopped
+        env_file:
+            - .env
+        environment:
+            NODE_ENV: production
+            PORT: 3000
+        expose:
+            - '3000'
+        networks:
+            - rui-net
+
+networks:
+    caxiauto-net:
+        external: true
+        name: rui-net
